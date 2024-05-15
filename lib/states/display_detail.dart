@@ -27,6 +27,8 @@ class DisplayDetail extends StatefulWidget {
 class _DisplayDetailState extends State<DisplayDetail> {
   AppController appController = Get.put(AppController());
 
+  final keyForm = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,68 +38,84 @@ class _DisplayDetailState extends State<DisplayDetail> {
       ),
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          children: [
-            WidgetTextRich(head: 'วันที่', value: DateTime.now().toString()),
-            const SizedBox(height: 8),
-            WidgetTextRich(
-                head: 'อายุ', value: widget.swineCodeModel.birthdate),
-            const SizedBox(height: 8),
-            WidgetTextRich(
-                head: 'Farm', value: widget.swineCodeModel.farmfarmcode),
-            const SizedBox(height: 8),
-            const WidgetForm(
-              labelText: 'คอก :',
-            ),
-            const SizedBox(height: 8),
-            FutureBuilder(
-              future: AppService().readCaseAnimal(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  if (appController.chooseCaseAnimals.isNotEmpty) {
-                    appController.chooseCaseAnimals.clear();
+        child: Form(key: keyForm,
+          child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            children: [
+              WidgetTextRich(head: 'วันที่', value: DateTime.now().toString()),
+              const SizedBox(height: 8),
+              WidgetTextRich(
+                  head: 'อายุ', value: widget.swineCodeModel.birthdate),
+              const SizedBox(height: 8),
+              WidgetTextRich(
+                  head: 'Farm', value: widget.swineCodeModel.farmfarmcode),
+              const SizedBox(height: 8),
+              WidgetForm(
+                validator: (p0) {
+                  if (p0?.isEmpty ?? true) {
+                    return 'กรุณากรอก คอก ด้วยคะ';
+                  } else {
+                    return null;
                   }
+                },
+                labelText: 'คอก :',
+              ),
+              const SizedBox(height: 8),
+              FutureBuilder(
+                future: AppService().readCaseAnimal(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    if (appController.chooseCaseAnimals.isNotEmpty) {
+                      appController.chooseCaseAnimals.clear();
+                    }
 
-                  List<CaseAnimalModel>? caseAnimalModels = snapshot.data;
-                  for (var element in caseAnimalModels!) {
-                    appController.chooseCaseAnimals.add(false);
-                  }
+                    List<CaseAnimalModel>? caseAnimalModels = snapshot.data;
+                    for (var element in caseAnimalModels!) {
+                      appController.chooseCaseAnimals.add(false);
+                    }
 
-                  return Obx(
-                    () {
-                      print(
-                          'chooseCaseAnimal ---> ${appController.chooseCaseAnimals.length}');
-                      return ListView.builder(
-                        itemCount: caseAnimalModels.length,
-                        physics: const ScrollPhysics(),
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) => SizedBox(
-                          width: Get.width * 0.8,
-                          child: CheckboxListTile(
-                            value: appController.chooseCaseAnimals[index],
-                            onChanged: (value) {
-                              appController.chooseCaseAnimals[index] = value;
-                            },
-                            title: WidgetText(
-                                data: caseAnimalModels[index].caseAnimal),
-                            controlAffinity: ListTileControlAffinity.leading,
+                    return Obx(
+                      () {
+                        print(
+                            'chooseCaseAnimal ---> ${appController.chooseCaseAnimals.length}');
+                        return ListView.builder(
+                          itemCount: caseAnimalModels.length,
+                          physics: const ScrollPhysics(),
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) => SizedBox(
+                            width: Get.width * 0.8,
+                            child: CheckboxListTile(
+                              value: appController.chooseCaseAnimals[index],
+                              onChanged: (value) {
+                                appController.chooseCaseAnimals[index] = value;
+                              },
+                              title: WidgetText(
+                                  data: caseAnimalModels[index].caseAnimal),
+                              controlAffinity: ListTileControlAffinity.leading,
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  );
-                } else {
-                  return const SizedBox();
-                }
-              },
-            ),
-          ],
+                        );
+                      },
+                    );
+                  } else {
+                    return const SizedBox();
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
       bottomSheet: WidgetButton(
         text: 'Finish',
-        onPressed: () {},
+        onPressed: () {
+
+          if (keyForm.currentState!.validate()) {
+            
+          }
+
+
+        },
         fullWidthButton: true,
       ),
     );
