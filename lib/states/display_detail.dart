@@ -29,6 +29,15 @@ class _DisplayDetailState extends State<DisplayDetail> {
 
   final keyForm = GlobalKey<FormState>();
 
+  var cases = <String>[];
+
+  @override
+  void initState() {
+    super.initState();
+
+    appController.display.value = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +47,8 @@ class _DisplayDetailState extends State<DisplayDetail> {
       ),
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: Form(key: keyForm,
+        child: Form(
+          key: keyForm,
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             children: [
@@ -72,28 +82,43 @@ class _DisplayDetailState extends State<DisplayDetail> {
                     List<CaseAnimalModel>? caseAnimalModels = snapshot.data;
                     for (var element in caseAnimalModels!) {
                       appController.chooseCaseAnimals.add(false);
+
+                      cases.add(element.caseAnimal);
                     }
 
                     return Obx(
                       () {
                         print(
                             'chooseCaseAnimal ---> ${appController.chooseCaseAnimals.length}');
-                        return ListView.builder(
-                          itemCount: caseAnimalModels.length,
-                          physics: const ScrollPhysics(),
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) => SizedBox(
-                            width: Get.width * 0.8,
-                            child: CheckboxListTile(
-                              value: appController.chooseCaseAnimals[index],
-                              onChanged: (value) {
-                                appController.chooseCaseAnimals[index] = value;
-                              },
-                              title: WidgetText(
-                                  data: caseAnimalModels[index].caseAnimal),
-                              controlAffinity: ListTileControlAffinity.leading,
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ListView.builder(
+                              itemCount: caseAnimalModels.length,
+                              physics: const ScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) => SizedBox(
+                                width: Get.width * 0.8,
+                                child: CheckboxListTile(
+                                  value: appController.chooseCaseAnimals[index],
+                                  onChanged: (value) {
+                                    appController.chooseCaseAnimals[index] =
+                                        value;
+                                  },
+                                  title: WidgetText(
+                                      data: caseAnimalModels[index].caseAnimal),
+                                  controlAffinity:
+                                      ListTileControlAffinity.leading,
+                                ),
+                              ),
                             ),
-                          ),
+                            appController.display.value
+                                ? const WidgetText(
+                                    data: 'กรุณาเลือก อาการ อย่างน้อย 1 รายการ',
+                                    style: TextStyle(color: GFColors.DANGER),
+                                  )
+                                : const SizedBox(),
+                          ],
                         );
                       },
                     );
@@ -109,12 +134,27 @@ class _DisplayDetailState extends State<DisplayDetail> {
       bottomSheet: WidgetButton(
         text: 'Finish',
         onPressed: () {
+          appController.display.value = true;
 
-          if (keyForm.currentState!.validate()) {
-            
+          if (appController.chooseCaseAnimals.contains(true)) {
+            appController.display.value = false;
           }
 
+          if (keyForm.currentState!.validate()) {
+            if (!appController.display.value) {
+              //ข้อมูลพร้อม
 
+              String swineCode = widget.swineCodeModel.swinecode;
+              String farmFarmCode = widget.swineCodeModel.farmfarmcode;
+              String age = widget.swineCodeModel.birthdate;
+              var listCaseAnimals = AppService().findListCaseAnimal(cases: cases);
+
+              print('swineCode --> $swineCode');
+              print('farmFarmCode --> $farmFarmCode');
+              print('age --> $age');
+              print('listCaseAnimals --> $listCaseAnimals');
+            }
+          }
         },
         fullWidthButton: true,
       ),

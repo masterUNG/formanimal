@@ -30,12 +30,24 @@ class AppService {
         'https://www.androidthai.in.th/fluttertraining/ungdata/getCaseAnimalUng.php';
 
     var result = await Dio().get(urlApi);
-   
+
     for (var element in json.decode(result.data)) {
       CaseAnimalModel model = CaseAnimalModel.fromMap(element);
       caseAnimalModels.add(model);
     }
 
     return caseAnimalModels;
+  }
+
+  List<String> findListCaseAnimal({required List<String> cases}) {
+    var result = <String>[];
+
+    for (var i = 0; i < cases.length; i++) {
+      if (appController.chooseCaseAnimals[i]) {
+        result.add(cases[i]);
+      }
+    }
+
+    return result;
   }
 }
