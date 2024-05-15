@@ -1,4 +1,6 @@
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:formanimal/states/display_detail.dart';
 import 'package:formanimal/utility/app_constant.dart';
 import 'package:formanimal/utility/app_controller.dart';
 import 'package:formanimal/utility/app_service.dart';
@@ -18,9 +20,15 @@ class ListSwineCode extends StatefulWidget {
 class _ListSwineCodeState extends State<ListSwineCode> {
   AppController appController = Get.put(AppController());
 
+  EasyRefreshController? easyRefreshController;
+
   @override
   void initState() {
     super.initState();
+
+    easyRefreshController = EasyRefreshController(
+      controlFinishLoad: true,
+    );
 
     AppService().readSwineCode();
   }
@@ -31,34 +39,49 @@ class _ListSwineCodeState extends State<ListSwineCode> {
       body: SafeArea(
           child: Obx(() => appController.swineCodeModels.isEmpty
               ? const SizedBox()
-              : ListView.builder(
-                  itemCount: appController.amountLoad.value,
-                  itemBuilder: (context, index) => Container(padding: const EdgeInsets.all(8),
-                    margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                    decoration: AppConstant().cureBox(),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        WidgetText(
-                            data: appController.swineCodeModels[index].swinecode
-                                .toString()),
-                        WidgetTextRich(
-                          head: 'OfficeCode',
-                          value: appController
-                              .swineCodeModels[index].officeofficecode,
+              : EasyRefresh(
+                  controller: easyRefreshController,
+                  onLoad: () async {
+                    await Future.delayed(Duration(seconds: 3)).then((value) {
+                      appController.amountLoad.value =
+                          appController.amountLoad.value + 100;
+                      easyRefreshController!.finishLoad();
+                    });
+                  },
+                  child: ListView.builder(
+                    itemCount: appController.amountLoad.value,
+                    itemBuilder: (context, index) => InkWell(onTap: () => Get.to(DisplayDetail(swineCodeModel: appController.swineCodeModels[index],)),
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        margin:
+                            const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                        decoration: AppConstant().cureBox(),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            WidgetText(
+                                data: appController
+                                    .swineCodeModels[index].swinecode
+                                    .toString()),
+                            WidgetTextRich(
+                              head: 'OfficeCode',
+                              value: appController
+                                  .swineCodeModels[index].officeofficecode,
+                            ),
+                            WidgetTextRich(
+                              head: 'gendergendercode',
+                              value: appController
+                                  .swineCodeModels[index].gendergendercode,
+                            ),
+                            WidgetTextRich(
+                              head: 'livestockcodelivestockcode',
+                              value: appController.swineCodeModels[index]
+                                  .livestockcodelivestockcode,
+                            ),
+                          ],
                         ),
-                        WidgetTextRich(
-                          head: 'gendergendercode',
-                          value: appController
-                              .swineCodeModels[index].gendergendercode,
-                        ),
-                        WidgetTextRich(
-                          head: 'livestockcodelivestockcode',
-                          value: appController.swineCodeModels[index]
-                              .livestockcodelivestockcode,
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ))),

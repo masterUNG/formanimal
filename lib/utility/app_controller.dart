@@ -5,4 +5,6 @@ class AppController extends GetxController {
   RxList swineCodeModels = <SwineCodeModel>[].obs;
 
   RxInt amountLoad = 100.obs;
+
+  RxList chooseCaseAnimals = <bool>[].obs;
 }
