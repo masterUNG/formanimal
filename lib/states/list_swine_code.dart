@@ -37,7 +37,7 @@ class _ListSwineCodeState extends State<ListSwineCode> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: Obx(() => appController.swineCodeModels.isEmpty
+          child: Obx(() => ((appController.swineCodeModels.isEmpty))
               ? const SizedBox()
               : EasyRefresh(
                   controller: easyRefreshController,
@@ -50,7 +50,10 @@ class _ListSwineCodeState extends State<ListSwineCode> {
                   },
                   child: ListView.builder(
                     itemCount: appController.amountLoad.value,
-                    itemBuilder: (context, index) => InkWell(onTap: () => Get.to(DisplayDetail(swineCodeModel: appController.swineCodeModels[index],)),
+                    itemBuilder: (context, index) => InkWell(
+                      onTap: () => Get.to(DisplayDetail(
+                        swineCodeModel: appController.swineCodeModels[index],
+                      )),
                       child: Container(
                         padding: const EdgeInsets.all(8),
                         margin:
@@ -60,10 +63,17 @@ class _ListSwineCodeState extends State<ListSwineCode> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            WidgetText(
-                                data: appController
-                                    .swineCodeModels[index].swinecode
-                                    .toString()),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                WidgetText(
+                                  data: appController
+                                      .swineCodeModels[index].swinecode,
+                                  style: AppConstant().h2Style(),
+                                ),
+                                Icon(Icons.check_box)
+                              ],
+                            ),
                             WidgetTextRich(
                               head: 'OfficeCode',
                               value: appController

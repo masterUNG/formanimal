@@ -21,12 +21,31 @@ class AppService {
     String urlApi =
         'https://www.androidthai.in.th/fluttertraining/ungdata/getSwineCode.php';
 
-    await Dio().get(urlApi).then((value) {
+    await Dio().get(urlApi).then((value) async {
       // print('value ---> $value');
+
 
       for (var element in json.decode(value.data)) {
         SwineCodeModel swineCodeModel = SwineCodeModel.fromMap(element);
         appController.swineCodeModels.add(swineCodeModel);
+
+
+
+        // String urlApiGetHeatDetactionWhereSwineCodeUng =
+        //     'https://www.androidthai.in.th/fluttertraining/ungdata/getHeatDetactionWhereSwineCodeUng.php?isAdd=true&swineCode=${swineCodeModel.swinecode}';
+
+        // await Dio().get(urlApiGetHeatDetactionWhereSwineCodeUng).then(
+        //   (value) {
+        //     if (value.toString() == 'null') {
+        //       appController.checkSwineCodes.add(false);
+        //     } else {
+        //       appController.checkSwineCodes.add(true);
+        //     }
+        //   },
+        // );
+
+
+
       }
     });
   }
