@@ -68,6 +68,8 @@ class _DisplayDetailState extends State<DisplayDetail> {
               WidgetTextRich(
                   head: 'Farm', value: widget.swineCodeModel.farmfarmcode),
               const SizedBox(height: 8),
+
+
               WidgetForm(
                 validator: (p0) {
                   if (p0?.isEmpty ?? true) {
@@ -79,6 +81,53 @@ class _DisplayDetailState extends State<DisplayDetail> {
                 labelText: 'คอก :',
               ),
               const SizedBox(height: 8),
+
+
+              WidgetForm(
+                validator: (p0) {
+                  if (p0?.isEmpty ?? true) {
+                    return 'กรุณากรอก น้ำหนัก ด้วยคะ';
+                  } else {
+                    return null;
+                  }
+                },
+                labelText: 'น้ำหนัก :',
+              ),
+              const SizedBox(height: 8),
+
+
+              WidgetForm(
+                validator: (p0) {
+                  if (p0?.isEmpty ?? true) {
+                    return 'กรุณากรอก เต้านมซ้าย ด้วยคะ';
+                  } else {
+                    return null;
+                  }
+                },
+                labelText: 'เต้านมซ้าย :',
+              ),
+              const SizedBox(height: 8),
+
+
+              WidgetForm(
+                validator: (p0) {
+                  if (p0?.isEmpty ?? true) {
+                    return 'กรุณากรอก เต้านมขวา ด้วยคะ';
+                  } else {
+                    return null;
+                  }
+                },
+                labelText: 'เต้านมขวา :',
+              ),
+              const SizedBox(height: 8),
+
+
+
+
+
+
+
+
               FutureBuilder(
                 future: AppService().readCaseAnimal(),
                 builder: (context, snapshot) {
