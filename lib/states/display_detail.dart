@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:formanimal/models/case_animal_model.dart';
+import 'package:formanimal/models/heat_detaction_model.dart';
 
 import 'package:formanimal/models/swine_code_model.dart';
 import 'package:formanimal/utility/app_controller.dart';
@@ -29,6 +30,11 @@ class _DisplayDetailState extends State<DisplayDetail> {
   AppController appController = Get.put(AppController());
 
   final keyForm = GlobalKey<FormState>();
+
+  TextEditingController penController = TextEditingController();
+  TextEditingController weightController = TextEditingController();
+  TextEditingController breastLeftController = TextEditingController();
+  TextEditingController breastRightController = TextEditingController();
 
   var cases = <String>[];
 
@@ -68,122 +74,15 @@ class _DisplayDetailState extends State<DisplayDetail> {
               WidgetTextRich(
                   head: 'Farm', value: widget.swineCodeModel.farmfarmcode),
               const SizedBox(height: 8),
-
-
-              WidgetForm(
-                validator: (p0) {
-                  if (p0?.isEmpty ?? true) {
-                    return 'กรุณากรอก คอก ด้วยคะ';
-                  } else {
-                    return null;
-                  }
-                },
-                labelText: 'คอก :',
-              ),
+              penForm(),
               const SizedBox(height: 8),
-
-
-              WidgetForm(
-                validator: (p0) {
-                  if (p0?.isEmpty ?? true) {
-                    return 'กรุณากรอก น้ำหนัก ด้วยคะ';
-                  } else {
-                    return null;
-                  }
-                },
-                labelText: 'น้ำหนัก :',
-              ),
+              weightForm(),
               const SizedBox(height: 8),
-
-
-              WidgetForm(
-                validator: (p0) {
-                  if (p0?.isEmpty ?? true) {
-                    return 'กรุณากรอก เต้านมซ้าย ด้วยคะ';
-                  } else {
-                    return null;
-                  }
-                },
-                labelText: 'เต้านมซ้าย :',
-              ),
+              breastLeftForm(),
               const SizedBox(height: 8),
-
-
-              WidgetForm(
-                validator: (p0) {
-                  if (p0?.isEmpty ?? true) {
-                    return 'กรุณากรอก เต้านมขวา ด้วยคะ';
-                  } else {
-                    return null;
-                  }
-                },
-                labelText: 'เต้านมขวา :',
-              ),
+              breastRightForm(),
               const SizedBox(height: 8),
-
-
-
-
-
-
-
-
-              FutureBuilder(
-                future: AppService().readCaseAnimal(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    if (appController.chooseCaseAnimals.isNotEmpty) {
-                      appController.chooseCaseAnimals.clear();
-                    }
-
-                    List<CaseAnimalModel>? caseAnimalModels = snapshot.data;
-                    for (var element in caseAnimalModels!) {
-                      appController.chooseCaseAnimals.add(false);
-
-                      cases.add(element.caseAnimal);
-                    }
-
-                    return Obx(
-                      () {
-                        print(
-                            'chooseCaseAnimal ---> ${appController.chooseCaseAnimals.length}');
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ListView.builder(
-                              itemCount: caseAnimalModels.length,
-                              physics: const ScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) => SizedBox(
-                                width: Get.width * 0.8,
-                                child: CheckboxListTile(
-                                  value: appController.chooseCaseAnimals[index],
-                                  onChanged: (value) {
-                                    appController.chooseCaseAnimals[index] =
-                                        value;
-                                  },
-                                  title: WidgetText(
-                                      data: caseAnimalModels[index].caseAnimal),
-                                  controlAffinity:
-                                      ListTileControlAffinity.leading,
-                                ),
-                              ),
-                            ),
-                            appController.display.value
-                                ? const WidgetText(
-                                    data: 'กรุณาเลือก อาการ อย่างน้อย 1 รายการ',
-                                    style: TextStyle(color: GFColors.DANGER),
-                                  )
-                                : const SizedBox(),
-                          ],
-                        );
-                      },
-                    );
-                  } else {
-                    return const SizedBox();
-                  }
-                },
-              ),
+              caseListView(),
             ],
           ),
         ),
@@ -211,11 +110,145 @@ class _DisplayDetailState extends State<DisplayDetail> {
               print('farmFarmCode --> $farmFarmCode');
               print('age --> $age');
               print('listCaseAnimals --> $listCaseAnimals');
+
+              HeatDetactionModel model = HeatDetactionModel(
+                  swineCode: swineCode,
+                  farmFarmCode: farmFarmCode,
+                  age: age,
+                  listCaseAnimals: listCaseAnimals.toString(),
+                  startTime: AppService().changeTimeToString(
+                      dateTime: appController.startTimes.last),
+                  finishTime:
+                      AppService().changeTimeToString(dateTime: DateTime.now()),
+                  recorder: '',
+                  inspector: '',
+                  weight: weightController.text,
+                  breastLeft: breastLeftController.text,
+                  breastRight: breastRightController.text,
+                  pen: penController.text);
+
+              print('model -------> ${model.toMap()}');
+
+              AppService().processInsertHeatDetaction(heatDetactionModel: model);
             }
           }
         },
         fullWidthButton: true,
       ),
+    );
+  }
+
+  FutureBuilder<List<CaseAnimalModel>> caseListView() {
+    return FutureBuilder(
+      future: AppService().readCaseAnimal(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (appController.chooseCaseAnimals.isNotEmpty) {
+            appController.chooseCaseAnimals.clear();
+          }
+
+          List<CaseAnimalModel>? caseAnimalModels = snapshot.data;
+          for (var element in caseAnimalModels!) {
+            appController.chooseCaseAnimals.add(false);
+
+            cases.add(element.caseAnimal);
+          }
+
+          return Obx(
+            () {
+              print(
+                  'chooseCaseAnimal ---> ${appController.chooseCaseAnimals.length}');
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListView.builder(
+                    itemCount: caseAnimalModels.length,
+                    physics: const ScrollPhysics(),
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) => SizedBox(
+                      width: Get.width * 0.8,
+                      child: CheckboxListTile(
+                        value: appController.chooseCaseAnimals[index],
+                        onChanged: (value) {
+                          appController.chooseCaseAnimals[index] = value;
+                        },
+                        title: WidgetText(
+                            data: caseAnimalModels[index].caseAnimal),
+                        controlAffinity: ListTileControlAffinity.leading,
+                      ),
+                    ),
+                  ),
+                  appController.display.value
+                      ? const WidgetText(
+                          data: 'กรุณาเลือก อาการ อย่างน้อย 1 รายการ',
+                          style: TextStyle(color: GFColors.DANGER),
+                        )
+                      : const SizedBox(),
+                ],
+              );
+            },
+          );
+        } else {
+          return const SizedBox();
+        }
+      },
+    );
+  }
+
+  WidgetForm breastRightForm() {
+    return WidgetForm(
+      controller: breastRightController,
+      validator: (p0) {
+        if (p0?.isEmpty ?? true) {
+          return 'กรุณากรอก เต้านมขวา ด้วยคะ';
+        } else {
+          return null;
+        }
+      },
+      labelText: 'เต้านมขวา :',
+    );
+  }
+
+  WidgetForm breastLeftForm() {
+    return WidgetForm(
+      controller: breastLeftController,
+      validator: (p0) {
+        if (p0?.isEmpty ?? true) {
+          return 'กรุณากรอก เต้านมซ้าย ด้วยคะ';
+        } else {
+          return null;
+        }
+      },
+      labelText: 'เต้านมซ้าย :',
+    );
+  }
+
+  WidgetForm weightForm() {
+    return WidgetForm(
+      keyboardType: TextInputType.number,
+      controller: weightController,
+      validator: (p0) {
+        if (p0?.isEmpty ?? true) {
+          return 'กรุณากรอก น้ำหนัก ด้วยคะ';
+        } else {
+          return null;
+        }
+      },
+      labelText: 'น้ำหนัก :',
+    );
+  }
+
+  WidgetForm penForm() {
+    return WidgetForm(
+      controller: penController,
+      validator: (p0) {
+        if (p0?.isEmpty ?? true) {
+          return 'กรุณากรอก คอก ด้วยคะ';
+        } else {
+          return null;
+        }
+      },
+      labelText: 'คอก :',
     );
   }
 

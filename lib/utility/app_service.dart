@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:formanimal/models/case_animal_model.dart';
+import 'package:formanimal/models/heat_detaction_model.dart';
 import 'package:formanimal/models/swine_code_model.dart';
 import 'package:formanimal/utility/app_controller.dart';
 import 'package:get/get.dart';
@@ -11,11 +12,9 @@ class AppService {
   AppController appController = Get.put(AppController());
 
   String changeTimeToString({required DateTime dateTime}) {
-
     DateFormat dateFormat = DateFormat('yy-MM-dd HH:mm');
     String result = dateFormat.format(dateTime);
     return result;
-    
   }
 
   Future<void> readSwineCode() async {
@@ -58,5 +57,13 @@ class AppService {
     }
 
     return result;
+  }
+
+  Future<void> processInsertHeatDetaction(
+      {required HeatDetactionModel heatDetactionModel}) async {
+    String urlApi =
+        'https://www.androidthai.in.th/fluttertraining/ungdata/insertHeatDetactionJi.php?isAdd=true&swineCode=${heatDetactionModel.swineCode}&farmFarmCode=${heatDetactionModel.farmFarmCode}&age=${heatDetactionModel.age}&listCaseAnimals=${heatDetactionModel.listCaseAnimals}&startTime=${heatDetactionModel.startTime}&finishTime=${heatDetactionModel.finishTime}&recorder=${heatDetactionModel.recorder}&inspector=${heatDetactionModel.inspector}&weight=${heatDetactionModel.weight}&breastLeft=${heatDetactionModel.breastLeft}&breastRight=${heatDetactionModel.breastRight}&pen=${heatDetactionModel.pen}';
+
+    await Dio().get(urlApi).then((onValue) => Get.back());
   }
 }
