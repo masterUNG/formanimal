@@ -7,6 +7,7 @@ import 'package:formanimal/utility/app_controller.dart';
 import 'package:formanimal/utility/app_service.dart';
 import 'package:formanimal/widgets/widget_button.dart';
 import 'package:formanimal/widgets/widget_form.dart';
+import 'package:formanimal/widgets/widget_icon_button.dart';
 import 'package:formanimal/widgets/widget_text.dart';
 import 'package:formanimal/widgets/widget_text_rich.dart';
 import 'package:get/get.dart';
@@ -52,7 +53,15 @@ class _DisplayDetailState extends State<DisplayDetail> {
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             children: [
-              WidgetTextRich(head: 'วันที่ (Start Time)', value: AppService().changeTimeToString(dateTime: DateTime.now())),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  WidgetTextRich(
+                      head: 'วันที่ (Start Time)',
+                      value: AppService()
+                          .changeTimeToString(dateTime: DateTime.now())),
+                  WidgetIconButton(icon: Icons.date_range, onPressed: () {  },)
+                ],
+              ),
               const SizedBox(height: 8),
               WidgetTextRich(
                   head: 'อายุ', value: widget.swineCodeModel.birthdate),
@@ -147,7 +156,8 @@ class _DisplayDetailState extends State<DisplayDetail> {
               String swineCode = widget.swineCodeModel.swinecode;
               String farmFarmCode = widget.swineCodeModel.farmfarmcode;
               String age = widget.swineCodeModel.birthdate;
-              var listCaseAnimals = AppService().findListCaseAnimal(cases: cases);
+              var listCaseAnimals =
+                  AppService().findListCaseAnimal(cases: cases);
 
               print('swineCode --> $swineCode');
               print('farmFarmCode --> $farmFarmCode');
