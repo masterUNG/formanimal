@@ -5,9 +5,18 @@ import 'package:formanimal/models/case_animal_model.dart';
 import 'package:formanimal/models/swine_code_model.dart';
 import 'package:formanimal/utility/app_controller.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class AppService {
   AppController appController = Get.put(AppController());
+
+  String changeTimeToString({required DateTime dateTime}) {
+
+    DateFormat dateFormat = DateFormat('yy-MM-dd HH:mm');
+    String result = dateFormat.format(dateTime);
+    return result;
+    
+  }
 
   Future<void> readSwineCode() async {
     String urlApi =

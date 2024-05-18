@@ -52,7 +52,7 @@ class _DisplayDetailState extends State<DisplayDetail> {
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             children: [
-              WidgetTextRich(head: 'วันที่', value: DateTime.now().toString()),
+              WidgetTextRich(head: 'วันที่ (Start Time)', value: AppService().changeTimeToString(dateTime: DateTime.now())),
               const SizedBox(height: 8),
               WidgetTextRich(
                   head: 'อายุ', value: widget.swineCodeModel.birthdate),
