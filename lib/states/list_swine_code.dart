@@ -93,7 +93,14 @@ class _ListSwineCodeState extends State<ListSwineCode> {
                                           .swineCodeModels[index].swinecode),
                                   builder: (context, snapshot) {
                                     if (snapshot.hasData) {
-                                      return const Icon(Icons.check_box);
+                                      var result = snapshot.data;
+
+                                      if (result!.isEmpty) {
+                                        return const SizedBox();
+                                      } else {
+                                        return const Icon(Icons.check_box);
+                                      }
+                                      
                                     } else {
                                       return const SizedBox();
                                     }

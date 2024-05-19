@@ -44,9 +44,9 @@ class AppService {
     });
   }
 
-  Future<HeatDetactionModel?> readHeatDetaction(
+  Future<List<HeatDetactionModel>> readHeatDetaction(
       {required String swineCode}) async {
-    HeatDetactionModel? heatDetactionModel;
+    var heatDetactionModels = <HeatDetactionModel>[];
 
     String urlApiGetHeatDetactionWhereSwineCodeUng =
         'https://www.androidthai.in.th/fluttertraining/ungdata/getHeatDetactionWhereSwineCodeUng.php?isAdd=true&swineCode=$swineCode';
@@ -55,10 +55,12 @@ class AppService {
 
     if (resut.toString() != 'null') {
       for (var element in json.decode(resut.data)) {
-        heatDetactionModel = HeatDetactionModel.fromMap(element);
+        HeatDetactionModel heatDetactionModel =
+            HeatDetactionModel.fromMap(element);
+        heatDetactionModels.add(heatDetactionModel);
       }
     }
-    return heatDetactionModel;
+    return heatDetactionModels;
   }
 
   Future<List<CaseAnimalModel>> readCaseAnimal() async {
