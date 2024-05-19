@@ -24,12 +24,9 @@ class AppService {
     await Dio().get(urlApi).then((value) async {
       // print('value ---> $value');
 
-
       for (var element in json.decode(value.data)) {
         SwineCodeModel swineCodeModel = SwineCodeModel.fromMap(element);
         appController.swineCodeModels.add(swineCodeModel);
-
-
 
         // String urlApiGetHeatDetactionWhereSwineCodeUng =
         //     'https://www.androidthai.in.th/fluttertraining/ungdata/getHeatDetactionWhereSwineCodeUng.php?isAdd=true&swineCode=${swineCodeModel.swinecode}';
@@ -43,11 +40,25 @@ class AppService {
         //     }
         //   },
         // );
-
-
-
       }
     });
+  }
+
+  Future<HeatDetactionModel?> readHeatDetaction(
+      {required String swineCode}) async {
+    HeatDetactionModel? heatDetactionModel;
+
+    String urlApiGetHeatDetactionWhereSwineCodeUng =
+        'https://www.androidthai.in.th/fluttertraining/ungdata/getHeatDetactionWhereSwineCodeUng.php?isAdd=true&swineCode=$swineCode';
+
+    var resut = await Dio().get(urlApiGetHeatDetactionWhereSwineCodeUng);
+
+    if (resut.toString() != 'null') {
+      for (var element in json.decode(resut.data)) {
+        heatDetactionModel = HeatDetactionModel.fromMap(element);
+      }
+    }
+    return heatDetactionModel;
   }
 
   Future<List<CaseAnimalModel>> readCaseAnimal() async {

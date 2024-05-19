@@ -27,6 +27,7 @@ class _ListSwineCodeState extends State<ListSwineCode> {
     super.initState();
 
     easyRefreshController = EasyRefreshController(
+      controlFinishRefresh: true,
       controlFinishLoad: true,
     );
 
@@ -41,8 +42,17 @@ class _ListSwineCodeState extends State<ListSwineCode> {
               ? const SizedBox()
               : EasyRefresh(
                   controller: easyRefreshController,
+                  onRefresh: () async {
+                    await Future.delayed(Duration(seconds: 3)).then(
+                      (value) {
+                        AppService().readSwineCode();
+                        easyRefreshController!.finishRefresh();
+                      },
+                    );
+                  },
                   onLoad: () async {
-                    await Future.delayed(const Duration(seconds: 3)).then((value) {
+                    await Future.delayed(const Duration(seconds: 3))
+                        .then((value) {
                       appController.amountLoad.value =
                           appController.amountLoad.value + 100;
                       easyRefreshController!.finishLoad();
@@ -51,9 +61,15 @@ class _ListSwineCodeState extends State<ListSwineCode> {
                   child: ListView.builder(
                     itemCount: appController.amountLoad.value,
                     itemBuilder: (context, index) => InkWell(
-                      onTap: () => Get.to(DisplayDetail(
-                        swineCodeModel: appController.swineCodeModels[index],
-                      )),
+                      onTap: () {
+                        Get.to(DisplayDetail(
+                          swineCodeModel: appController.swineCodeModels[index],
+                        ))?.then(
+                          (value) {
+                            setState(() {});
+                          },
+                        );
+                      },
                       child: Container(
                         padding: const EdgeInsets.all(8),
                         margin:
@@ -71,7 +87,18 @@ class _ListSwineCodeState extends State<ListSwineCode> {
                                       .swineCodeModels[index].swinecode,
                                   style: AppConstant().h2Style(),
                                 ),
-                                Icon(Icons.check_box)
+                                FutureBuilder(
+                                  future: AppService().readHeatDetaction(
+                                      swineCode: appController
+                                          .swineCodeModels[index].swinecode),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      return const Icon(Icons.check_box);
+                                    } else {
+                                      return const SizedBox();
+                                    }
+                                  },
+                                ),
                               ],
                             ),
                             WidgetTextRich(
