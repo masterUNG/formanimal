@@ -97,4 +97,11 @@ class AppService {
 
     return result;
   }
+
+  Future<void> processDeleteHeatDetactionById({required String id}) async {
+    String urlApi =
+        'https://www.androidthai.in.th/fluttertraining/ungdata/deleteHeatWhereIdUng.php?isAdd=true&id=$id';
+
+    await Dio().get(urlApi);
+  }
 }

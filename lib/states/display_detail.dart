@@ -76,8 +76,13 @@ class _DisplayDetailState extends State<DisplayDetail> {
                       text: 'ดูข้อมูล',
                       onPressed: () {
                         Get.to(DisplayHeatDetaction(
-                            swineCodeModel: widget.swineCodeModel,
-                            heatDetactionModels: result));
+                                swineCodeModel: widget.swineCodeModel,
+                                heatDetactionModels: result))
+                            ?.then(
+                          (value) {
+                            setState(() {});
+                          },
+                        );
                       },
                     ),
                   );
