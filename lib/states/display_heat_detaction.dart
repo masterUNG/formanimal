@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:formanimal/models/heat_detaction_model.dart';
 import 'package:formanimal/models/swine_code_model.dart';
+import 'package:formanimal/states/edit_heat_detaction.dart';
 import 'package:formanimal/utility/app_constant.dart';
 import 'package:formanimal/utility/app_dialog.dart';
 import 'package:formanimal/utility/app_service.dart';
@@ -81,7 +82,11 @@ class _DisplayHeatDetactionState extends State<DisplayHeatDetaction> {
                         children: [
                           WidgetIconButton(
                             icon: Icons.edit,
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(EditHeatDetaction(
+                                  heatDetactionModel:
+                                      widget.heatDetactionModels[index]));
+                            },
                             type: GFButtonType.outline2x,
                           ),
                           const SizedBox(width: 4),
