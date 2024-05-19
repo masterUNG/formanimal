@@ -4,6 +4,7 @@ import 'package:formanimal/models/case_animal_model.dart';
 import 'package:formanimal/models/heat_detaction_model.dart';
 
 import 'package:formanimal/models/swine_code_model.dart';
+import 'package:formanimal/states/display_heat_detaction.dart';
 import 'package:formanimal/utility/app_controller.dart';
 import 'package:formanimal/utility/app_service.dart';
 import 'package:formanimal/widgets/widget_button.dart';
@@ -73,7 +74,11 @@ class _DisplayDetailState extends State<DisplayDetail> {
                     margin: const EdgeInsets.only(right: 16),
                     child: WidgetButton(
                       text: 'ดูข้อมูล',
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.to(DisplayHeatDetaction(
+                            swineCodeModel: widget.swineCodeModel,
+                            heatDetactionModels: result));
+                      },
                     ),
                   );
                 }
