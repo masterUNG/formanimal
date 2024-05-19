@@ -42,7 +42,7 @@ class _ListSwineCodeState extends State<ListSwineCode> {
               : EasyRefresh(
                   controller: easyRefreshController,
                   onLoad: () async {
-                    await Future.delayed(Duration(seconds: 3)).then((value) {
+                    await Future.delayed(const Duration(seconds: 3)).then((value) {
                       appController.amountLoad.value =
                           appController.amountLoad.value + 100;
                       easyRefreshController!.finishLoad();
