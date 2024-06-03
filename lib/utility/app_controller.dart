@@ -18,4 +18,5 @@ class AppController extends GetxController {
   RxBool displayListSearch = false.obs;
 
   RxList displayStartTimes = <String>[].obs;
+  RxList displayFinishTimes = <String>[].obs;
 }
