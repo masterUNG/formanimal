@@ -275,8 +275,8 @@ class _EditHeatDetactionState extends State<EditHeatDetaction> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        WidgetTextRich(
-            head: 'น้ำหนัก', value: widget.heatDetactionModel.weight),
+        Obx(() => WidgetTextRich(
+            head: 'น้ำหนัก', value: appController.heatDetactionModels.last.weight)),
         WidgetIconButton(
           icon: Icons.edit,
           onPressed: () {
@@ -292,7 +292,18 @@ class _EditHeatDetactionState extends State<EditHeatDetaction> {
                 ),
                 firstAction: WidgetButton(
                   text: 'Edit',
-                  onPressed: () {},
+                  onPressed: () {
+                    Map<String, dynamic> map =
+                        appController.heatDetactionModels.last.toMap();
+
+                    map['weight'] = textEditingController.text;
+
+                    HeatDetactionModel model = HeatDetactionModel.fromMap(map);
+
+                    appController.heatDetactionModels.add(model);
+
+                    Get.back();
+                  },
                 ));
           },
           type: GFButtonType.outline2x,
