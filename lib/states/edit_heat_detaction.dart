@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:formanimal/models/case_animal_model.dart';
 
 import 'package:formanimal/models/heat_detaction_model.dart';
 import 'package:formanimal/utility/app_controller.dart';
@@ -8,6 +9,7 @@ import 'package:formanimal/utility/app_service.dart';
 import 'package:formanimal/widgets/widget_button.dart';
 import 'package:formanimal/widgets/widget_form.dart';
 import 'package:formanimal/widgets/widget_icon_button.dart';
+import 'package:formanimal/widgets/widget_text.dart';
 import 'package:formanimal/widgets/widget_text_rich.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
@@ -36,6 +38,8 @@ class _EditHeatDetactionState extends State<EditHeatDetaction> {
     appController.displayStartTimes.add(widget.heatDetactionModel.startTime);
 
     appController.displayFinishTimes.add(widget.heatDetactionModel.finishTime);
+
+    AppService().findChooseEditCaseAnimals(listCaseAnimals: widget.heatDetactionModel.listCaseAnimals);
   }
 
   @override
@@ -59,7 +63,29 @@ class _EditHeatDetactionState extends State<EditHeatDetaction> {
           breastLeftDisplay(),
           const SizedBox(height: 4),
           breastRightDisplay(),
-          const SizedBox(height: 4),
+          const SizedBox(height: 16),
+          FutureBuilder(
+            future: AppService().readCaseAnimal(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                List<CaseAnimalModel> caseAnimalModels = snapshot.data!;
+
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const ScrollPhysics(),
+                  itemCount: caseAnimalModels.length,
+                  itemBuilder: (context, index) => CheckboxListTile(
+                    controlAffinity: ListTileControlAffinity.leading,
+                    title: WidgetText(data: caseAnimalModels[index].caseAnimal),
+                    value: false,
+                    onChanged: (value) {},
+                  ),
+                );
+              } else {
+                return const SizedBox();
+              }
+            },
+          ),
         ],
       ),
     );
@@ -215,8 +241,9 @@ class _EditHeatDetactionState extends State<EditHeatDetaction> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        WidgetTextRich(
-            head: 'เต้านมขวา', value: widget.heatDetactionModel.breastRight),
+        Obx(() => WidgetTextRich(
+            head: 'เต้านมขวา',
+            value: appController.heatDetactionModels.last.breastRight)),
         WidgetIconButton(
           icon: Icons.edit,
           onPressed: () {
@@ -232,7 +259,18 @@ class _EditHeatDetactionState extends State<EditHeatDetaction> {
                 ),
                 firstAction: WidgetButton(
                   text: 'Edit',
-                  onPressed: () {},
+                  onPressed: () {
+                    Map<String, dynamic> map =
+                        appController.heatDetactionModels.last.toMap();
+
+                    map['breastRight'] = textEditingController.text;
+
+                    HeatDetactionModel model = HeatDetactionModel.fromMap(map);
+
+                    appController.heatDetactionModels.add(model);
+
+                    Get.back();
+                  },
                 ));
           },
           type: GFButtonType.outline2x,
@@ -245,8 +283,9 @@ class _EditHeatDetactionState extends State<EditHeatDetaction> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        WidgetTextRich(
-            head: 'เต้านมซ้าย', value: widget.heatDetactionModel.breastLeft),
+        Obx(() => WidgetTextRich(
+            head: 'เต้านมซ้าย',
+            value: appController.heatDetactionModels.last.breastLeft)),
         WidgetIconButton(
           icon: Icons.edit,
           onPressed: () {
@@ -262,7 +301,18 @@ class _EditHeatDetactionState extends State<EditHeatDetaction> {
                 ),
                 firstAction: WidgetButton(
                   text: 'Edit',
-                  onPressed: () {},
+                  onPressed: () {
+                    Map<String, dynamic> map =
+                        appController.heatDetactionModels.last.toMap();
+
+                    map['breastLeft'] = textEditingController.text;
+
+                    HeatDetactionModel model = HeatDetactionModel.fromMap(map);
+
+                    appController.heatDetactionModels.add(model);
+
+                    Get.back();
+                  },
                 ));
           },
           type: GFButtonType.outline2x,
@@ -276,7 +326,8 @@ class _EditHeatDetactionState extends State<EditHeatDetaction> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Obx(() => WidgetTextRich(
-            head: 'น้ำหนัก', value: appController.heatDetactionModels.last.weight)),
+            head: 'น้ำหนัก',
+            value: appController.heatDetactionModels.last.weight)),
         WidgetIconButton(
           icon: Icons.edit,
           onPressed: () {

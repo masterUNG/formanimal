@@ -106,4 +106,12 @@ class AppService {
 
     await Dio().get(urlApi);
   }
+
+  Future<void> findChooseEditCaseAnimals(
+      {required String listCaseAnimals}) async {
+    String string = listCaseAnimals;
+
+    string = string.substring(1, string.length - 1);
+    print('string ====> $string');
+  }
 }

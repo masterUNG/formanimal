@@ -8,7 +8,11 @@ class AppController extends GetxController {
   RxList checkSwineCodes = <bool>[].obs;
 
   RxInt amountLoad = 100.obs;
+
   RxList chooseCaseAnimals = <bool>[].obs;
+
+  RxList chooseEditCaseAnimals = <bool>[].obs;
+
   RxBool display = false.obs;
 
   RxList startTimes = <DateTime>[].obs;
@@ -18,5 +22,6 @@ class AppController extends GetxController {
   RxBool displayListSearch = false.obs;
 
   RxList displayStartTimes = <String>[].obs;
+
   RxList displayFinishTimes = <String>[].obs;
 }
