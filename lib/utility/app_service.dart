@@ -72,6 +72,8 @@ class AppService {
     for (var i = 0; i < cases.length; i++) {
       if (appController.chooseCaseAnimals[i]) {
         result.add(cases[i]);
+      } else {
+        result.add('');
       }
     }
 

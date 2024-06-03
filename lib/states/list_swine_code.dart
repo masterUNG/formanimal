@@ -55,12 +55,10 @@ class _ListSwineCodeState extends State<ListSwineCode> {
           onChanged: (p0) {
             appDebouncer.run(
               () {
-                if (searchSwineCodeModels.isNotEmpty) {
-                  searchSwineCodeModels.clear();
+                searchSwineCodeModels.clear();
 
-                  for (var element in appController.swineCodeModels) {
-                    searchSwineCodeModels.add(element);
-                  }
+                for (var element in appController.swineCodeModels) {
+                  searchSwineCodeModels.add(element);
                 }
 
                 searchSwineCodeModels = searchSwineCodeModels
@@ -89,7 +87,8 @@ class _ListSwineCodeState extends State<ListSwineCode> {
               : appController.displayListSearch.value
                   ? ListView.builder(
                       itemCount: searchSwineCodeModels.length,
-                      itemBuilder: (context, index) => contentListView(swineCodeModel: searchSwineCodeModels[index]),
+                      itemBuilder: (context, index) => contentListView(
+                          swineCodeModel: searchSwineCodeModels[index]),
                     )
                   : EasyRefresh(
                       controller: easyRefreshController,
@@ -111,7 +110,9 @@ class _ListSwineCodeState extends State<ListSwineCode> {
                       },
                       child: ListView.builder(
                         itemCount: appController.amountLoad.value,
-                        itemBuilder: (context, index) => contentListView(swineCodeModel: appController.swineCodeModels[index]),
+                        itemBuilder: (context, index) => contentListView(
+                            swineCodeModel:
+                                appController.swineCodeModels[index]),
                       ),
                     ))),
     );
@@ -144,9 +145,8 @@ class _ListSwineCodeState extends State<ListSwineCode> {
                   style: AppConstant().h2Style(),
                 ),
                 FutureBuilder(
-                  future: AppService().readHeatDetaction(
-                      swineCode:
-                          swineCodeModel.swinecode),
+                  future: AppService()
+                      .readHeatDetaction(swineCode: swineCodeModel.swinecode),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       var result = snapshot.data;

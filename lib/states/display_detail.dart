@@ -304,6 +304,8 @@ class _DisplayDetailState extends State<DisplayDetail> {
             WidgetIconButton(
               icon: Icons.date_range,
               onPressed: () async {
+
+
                 var chooseDateTime = await showDatePicker(
                   context: context,
                   firstDate: DateTime(appController.startTimes.last.year - 1),
@@ -321,11 +323,15 @@ class _DisplayDetailState extends State<DisplayDetail> {
 
                   appController.startTimes.add(result);
                 }
+
+
               },
             ),
             WidgetIconButton(
               icon: Icons.watch,
               onPressed: () async {
+
+
                 TimeOfDay timeOfDay = TimeOfDay(
                     hour: appController.startTimes.last.hour,
                     minute: appController.startTimes.last.minute);
@@ -344,6 +350,10 @@ class _DisplayDetailState extends State<DisplayDetail> {
 
                   appController.startTimes.add(newDateTime);
                 }
+
+
+
+                
               },
             ),
           ],

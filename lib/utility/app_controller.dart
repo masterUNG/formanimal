@@ -16,4 +16,6 @@ class AppController extends GetxController {
   RxList heatDetactionModels = <HeatDetactionModel>[].obs;
 
   RxBool displayListSearch = false.obs;
+
+  RxList displayStartTimes = <String>[].obs;
 }
