@@ -33,13 +33,16 @@ class _EditHeatDetactionState extends State<EditHeatDetaction> {
   void initState() {
     super.initState();
 
+    appController.displaySave.value = false;
+
     appController.heatDetactionModels.add(widget.heatDetactionModel);
 
     appController.displayStartTimes.add(widget.heatDetactionModel.startTime);
 
     appController.displayFinishTimes.add(widget.heatDetactionModel.finishTime);
 
-    AppService().findChooseEditCaseAnimals(listCaseAnimals: widget.heatDetactionModel.listCaseAnimals);
+    AppService().findChooseEditCaseAnimals(
+        listCaseAnimals: widget.heatDetactionModel.listCaseAnimals);
   }
 
   @override
@@ -48,6 +51,17 @@ class _EditHeatDetactionState extends State<EditHeatDetaction> {
       appBar: AppBar(
         title: WidgetTextRich(
             head: 'SwineCode', value: widget.heatDetactionModel.swineCode),
+        actions: [
+          Obx(() => appController.displaySave.value
+              ? Container(
+                  margin: const EdgeInsets.only(right: 16),
+                  child: WidgetButton(
+                    text: 'Save',
+                    onPressed: () {},
+                  ),
+                )
+              : const SizedBox())
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -70,17 +84,23 @@ class _EditHeatDetactionState extends State<EditHeatDetaction> {
               if (snapshot.hasData) {
                 List<CaseAnimalModel> caseAnimalModels = snapshot.data!;
 
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: const ScrollPhysics(),
-                  itemCount: caseAnimalModels.length,
-                  itemBuilder: (context, index) => CheckboxListTile(
-                    controlAffinity: ListTileControlAffinity.leading,
-                    title: WidgetText(data: caseAnimalModels[index].caseAnimal),
-                    value: false,
-                    onChanged: (value) {},
-                  ),
-                );
+                return Obx(() => appController.chooseEditCaseAnimals.isNotEmpty
+                    ? ListView.builder(
+                        shrinkWrap: true,
+                        physics: const ScrollPhysics(),
+                        itemCount: caseAnimalModels.length,
+                        itemBuilder: (context, index) => CheckboxListTile(
+                          controlAffinity: ListTileControlAffinity.leading,
+                          title: WidgetText(
+                              data: caseAnimalModels[index].caseAnimal),
+                          value: appController.chooseEditCaseAnimals[index],
+                          onChanged: (value) {
+                            appController.displaySave.value = true;
+                            appController.chooseEditCaseAnimals[index] = value;
+                          },
+                        ),
+                      )
+                    : const SizedBox());
               } else {
                 return const SizedBox();
               }
@@ -103,6 +123,8 @@ class _EditHeatDetactionState extends State<EditHeatDetaction> {
             WidgetIconButton(
               icon: Icons.date_range,
               onPressed: () async {
+                appController.displaySave.value = true;
+
                 var chooseDateTime = await showDatePicker(
                   context: context,
                   firstDate: DateTime(appController.startTimes.last.year - 1),
@@ -132,6 +154,8 @@ class _EditHeatDetactionState extends State<EditHeatDetaction> {
             WidgetIconButton(
               icon: Icons.watch,
               onPressed: () async {
+                appController.displaySave.value = true;
+
                 TimeOfDay timeOfDay = TimeOfDay(
                     hour: appController.startTimes.last.hour,
                     minute: appController.startTimes.last.minute);
@@ -176,6 +200,8 @@ class _EditHeatDetactionState extends State<EditHeatDetaction> {
             WidgetIconButton(
               icon: Icons.date_range,
               onPressed: () async {
+                appController.displaySave.value = true;
+
                 var chooseDateTime = await showDatePicker(
                   context: context,
                   firstDate: DateTime(appController.startTimes.last.year - 1),
@@ -205,6 +231,8 @@ class _EditHeatDetactionState extends State<EditHeatDetaction> {
             WidgetIconButton(
               icon: Icons.watch,
               onPressed: () async {
+                appController.displaySave.value = true;
+
                 TimeOfDay timeOfDay = TimeOfDay(
                     hour: appController.startTimes.last.hour,
                     minute: appController.startTimes.last.minute);
@@ -260,6 +288,8 @@ class _EditHeatDetactionState extends State<EditHeatDetaction> {
                 firstAction: WidgetButton(
                   text: 'Edit',
                   onPressed: () {
+                    appController.displaySave.value = true;
+
                     Map<String, dynamic> map =
                         appController.heatDetactionModels.last.toMap();
 
@@ -302,6 +332,8 @@ class _EditHeatDetactionState extends State<EditHeatDetaction> {
                 firstAction: WidgetButton(
                   text: 'Edit',
                   onPressed: () {
+                    appController.displaySave.value = true;
+
                     Map<String, dynamic> map =
                         appController.heatDetactionModels.last.toMap();
 
@@ -344,6 +376,8 @@ class _EditHeatDetactionState extends State<EditHeatDetaction> {
                 firstAction: WidgetButton(
                   text: 'Edit',
                   onPressed: () {
+                    appController.displaySave.value = true;
+
                     Map<String, dynamic> map =
                         appController.heatDetactionModels.last.toMap();
 
@@ -389,6 +423,8 @@ class _EditHeatDetactionState extends State<EditHeatDetaction> {
                       firstAction: WidgetButton(
                         text: 'Edit',
                         onPressed: () {
+                          appController.displaySave.value = true;
+
                           Map<String, dynamic> map =
                               appController.heatDetactionModels.last.toMap();
 
