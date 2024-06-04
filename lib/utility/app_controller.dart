@@ -5,6 +5,7 @@ import 'package:get/get_rx/get_rx.dart';
 
 class AppController extends GetxController {
   RxList swineCodeModels = <SwineCodeModel>[].obs;
+
   RxList checkSwineCodes = <bool>[].obs;
 
   RxInt amountLoad = 100.obs;
@@ -26,4 +27,6 @@ class AppController extends GetxController {
   RxList displayFinishTimes = <String>[].obs;
 
   RxBool displaySave = false.obs;
+
+  RxList caseAnimals = <String>[].obs;
 }
